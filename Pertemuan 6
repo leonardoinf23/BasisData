@@ -1,0 +1,47 @@
+CREATE TABLE Siswa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(100),
+    ktp VARCHAR(20) UNIQUE,
+    tanggal_lahir DATE,
+    tempat_lahir VARCHAR(100),
+    nomor_pendaftaran VARCHAR(20) UNIQUE,
+    status_pembayaran ENUM('Belum Bayar', 'Bayar') DEFAULT 'Belum Bayar'
+);
+
+CREATE TABLE Hasil_Test (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_siswa INT,
+    nilai INT,
+    FOREIGN KEY (id_siswa) REFERENCES Siswa(id)
+);
+
+CREATE TABLE Pembayaran (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_siswa INT,
+    nomor_kwitansi VARCHAR(20) UNIQUE,
+    tanggal_pembayaran DATE,
+    FOREIGN KEY (id_siswa) REFERENCES Siswa(id)
+);
+
+CREATE TABLE Laporan (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    jenis_laporan ENUM('Data Pendaftaran', 'Data Siswa', 'Laporan Pembayaran'),
+    periode_mulai DATE,
+    periode_selesai DATE,
+    tanggal_dibuat DATE
+);
+
+Contoh Query untuk Proses
+SELECT * FROM Siswa WHERE ktp = '1234567890123456' OR (nama = 'John Doe' AND tanggal_lahir = '2000-01-01');
+INSERT INTO Siswa (nama, ktp, tanggal_lahir, tempat_lahir, nomor_pendaftaran)
+VALUES ('John Doe', '1234567890123456', '2000-01-01', 'Jakarta', 'P001');
+UPDATE Siswa SET status_pembayaran = 'Bayar' WHERE nomor_pendaftaran = 'P001';
+INSERT INTO Hasil_Test (id_siswa, nilai)
+VALUES (1, 85);
+
+UPDATE Hasil_Test SET nilai = 90 WHERE id = 1;
+SELECT * FROM Hasil_Test WHERE id_siswa = 1;
+SELECT status_pembayaran FROM Siswa WHERE nomor_pendaftaran = 'P001';
+INSERT INTO Pembayaran (id_siswa, nomor_kwitansi, tanggal_pembayaran)
+VALUES (1, 'KW001', CURDATE());
+SELECT * FROM Pembayaran WHERE tanggal_pembayaran BETWEEN '2024-01-01' AND '2024-12-31';
